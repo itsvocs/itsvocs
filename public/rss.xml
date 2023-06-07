@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title><![CDATA[Blog posts | RSS Feed]]></title>
+        <description><![CDATA[Welcome to this blog posts!]]></description>
+        <link>localhost:3000</link>
+        <image>
+            <url>localhost:3000/logo.png</url>
+            <title>Blog posts | RSS Feed</title>
+            <link>localhost:3000</link>
+        </image>
+        <generator>RSS for Node</generator>
+        <lastBuildDate>Wed, 07 Jun 2023 12:07:56 GMT</lastBuildDate>
+        <atom:link href="localhost:3000/rss.xml" rel="self" type="application/rss+xml"/>
+        <pubDate>Wed, 07 Jun 2023 12:07:56 GMT</pubDate>
+        <copyright><![CDATA[Tous les droits réservés 2023, Pouani Vocs]]></copyright>
+        <item>
+            <title><![CDATA[Using AI to generate poetry]]></title>
+            <description><![CDATA[I used GPT-3 to generate poetry and other creative content. . Non aliquid explicabo necessitatibus unde. Sed exercitationem placeat consectetur nulla deserunt vel. Iusto corrupti dicta.]]></description>
+            <link>localhost:3000/blog/2Post</link>
+            <guid isPermaLink="true">localhost:3000/blog/2Post</guid>
+            <pubDate>Fri, 27 Aug 2021 00:00:00 GMT</pubDate>
+        </item>
+        <item>
+            <title><![CDATA[Building a QR code micro-app]]></title>
+            <description><![CDATA[Build a serverless 'hello-world' QR code app with Python and AWS. . Non aliquid explicabo necessitatibus unde. Sed exercitationem placeat consectetur nulla deserunt vel. Iusto corrupti dicta.]]></description>
+            <link>localhost:3000/blog/3Post</link>
+            <guid isPermaLink="true">localhost:3000/blog/3Post</guid>
+            <pubDate>Sat, 14 Aug 2021 00:00:00 GMT</pubDate>
+        </item>
+        <item>
+            <title><![CDATA[L'avènement de l'IA : Atouts, attentes, perspectives et but]]></title>
+            <description><![CDATA[Les attentes futures incluent des avancées dans la médecine, les transports intelligents, l'assistance à la création artistique et l'amélioration de l'expérience client. Le but ultime de l'IA est de simuler l'intelligence humaine et d'améliorer notre qualité de vie, tout en garantissant une utilisation éthique et responsable.]]></description>
+            <link>localhost:3000/blog/avenement-ia</link>
+            <guid isPermaLink="true">localhost:3000/blog/avenement-ia</guid>
+            <pubDate>Invalid Date</pubDate>
+        </item>
+        <item>
+            <title><![CDATA[Getting Started with AWS]]></title>
+            <description><![CDATA[Create an AWS account and set up CLI/SDK access. . Non aliquid explicabo necessitatibus unde. Sed exercitationem placeat consectetur nulla deserunt vel. Iusto corrupti dicta.]]></description>
+            <link>localhost:3000/blog/firstPost</link>
+            <guid isPermaLink="true">localhost:3000/blog/firstPost</guid>
+            <pubDate>Sun, 27 Dec 2020 00:00:00 GMT</pubDate>
+        </item>
+        <item>
+            <title><![CDATA[Comment installer et commencer à programmer Java sur votre Mac]]></title>
+            <description><![CDATA[Java est l'un des langages de programmation les plus populaires et puissants utilisés dans le développement logiciel. Si vous êtes un utilisateur de Mac et que vous souhaitez commencer à programmer en Java, voici un guide détaillé pour installer Java et configurer votre environnement de développement sur votre Mac.]]></description>
+            <link>localhost:3000/blog/installation-java-mac</link>
+            <guid isPermaLink="true">localhost:3000/blog/installation-java-mac</guid>
+            <pubDate>Invalid Date</pubDate>
+        </item>
+    </channel>
+</rss>

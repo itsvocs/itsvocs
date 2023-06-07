@@ -2,26 +2,67 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
-}
+@layer base {
+  .text-edge-outline {
+    -webkit-text-stroke: 1px rgba(255, 255, 255, 0.3);
+  }
 
-@media (prefers-color-scheme: dark) {
   :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
+    --tw-prose-body: "#fff";
   }
 }
+.body-bg {
+  background-image: url("../public/img/bg2.png");
+  background-position: center;
+}
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+@layer components {
+  .link-prose {
+    @apply prose-a:text-slate-100 hover:text-slate-400 transition-colors prose-a:font-medium  prose-a:underline-offset-2 prose-a:decoration-wavy prose-a:decoration-indigo-400 hover:prose-a:decoration-indigo-500 prose-a:ease-in-out;
+  }
+  .link {
+    @apply text-slate-300 hover:text-slate-400 transition-colors underline font-medium  underline-offset-2 decoration-wavy decoration-indigo-400 hover:decoration-indigo-500 ease-in-out;
+  }
+  .typography {
+    @apply prose prose-p:text-base/8 prose-code:bg-slate-50/20 prose-code:p-1 prose-code:px-2 prose-code:rounded prose-code:text-slate-200 prose-p:text-gray-300 prose-p:font-light prose-headings:text-white link-prose  prose-strong:text-slate-100 prose-ul:text-gray-300 prose-ol:text-gray-300 prose-pre:bg-slate-50/10 prose-blockquote:border-l-indigo-500/70  prose-code:font-display prose-code:font-thin prose-code:leading-6 prose-td:text-gray-300 prose-img:rounded-md prose-img:shadow-md prose-img:w-[500px] prose-img:h-[400px] prose-img:bg-cover prose-img:object-cover prose-li:text-slate-200 prose-h2:flex prose-h2:items-center;
+  }
+
+  .input {
+    @apply block w-full rounded-md border-0 py-2 bg-transparent pr-2 text-slate-300 ring-1 ring-inset ring-slate-300/30 placeholder:text-zinc-700 focus:ring-inset focus:ring-slate-300/90 transition-opacity sm:text-sm sm:leading-6;
+  }
+  .error-input {
+    @apply mt-2 text-red-500 text-xs;
+  }
+}
+@keyframes bounce {
+  0%,
+  100% {
+    transform: translateY(-25%);
+    animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+  }
+  50% {
+    transform: none;
+    animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+  }
+}
+.animate-bounces {
+  animation: bounce 2s infinite;
+}
+
+.web-mask {
+  -webkit-mask-image: radial-gradient(
+    100% 100% at top right,
+    white,
+    transparent
+  );
+}
+
+.lang-code {
+  background-color: transparent !important;
+  padding: 0 !important;
+}
+
+.lang-bash {
+  background-color: transparent !important;
+  padding: 0 !important;
 }
