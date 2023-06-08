@@ -37,7 +37,7 @@ export default function Header() {
     <header
       className={`w-full animate-fade- top-0 z-50 transition-transform  ${
         scrollPosition > 100
-          ? "sticky bg-black/75 backdrop-blur-sm shadow-lg shadow-indigo-950/30"
+          ? "sticky bg-black/75 backdrop-blur-sm shadow-lg shadow-indigo-950/10"
           : "fixed bg-transparent"
       }`}>
       <nav

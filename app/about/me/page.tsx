@@ -47,7 +47,7 @@ export default function MePage() {
                   </div>
 
                   <div className="lg:order-first lg:row-span-2">
-                    <h1 className="text-4xl font-bold tracking-tight text-slate-100 sm:text-5xl">
+                    <h1 className="font-display text-4xl font-bold tracking-tight text-slate-100 sm:text-5xl">
                       Découvrez-moi et mes passions.
                     </h1>
                     <div className="mt-6 space-y-7 text-base text-slate-300 font-light leading-7 typography">

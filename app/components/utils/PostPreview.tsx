@@ -14,7 +14,7 @@ const PostPreview = (props: PostMetadata) => {
           {props.date}
         </time>
         <span
-          className={`inline-flex items-center rounded-2xl  px-2.5 py-1 text-xs font-medium  ring-1 ring-inset   ${
+          className={`inline-flex items-center rounded-2xl  px-2.5 py-1 text-xs font-semibold  ring-1 ring-inset   ${
             props.category === "IA"
               ? "text-amber-600 ring-amber-700/20 bg-amber-600/10"
               : props.category === "Technologie"
@@ -29,7 +29,7 @@ const PostPreview = (props: PostMetadata) => {
         </span>
       </div>
       <Link href={`/blog/${props.slug}`} className="group relative">
-        <h3 className="mt-3 text-lg font-semibold leading-6 text-slate-100 ">
+        <h3 className="font-display tracking-wider mt-3 text-lg leading-6 text-slate-100 ">
           <span className="absolute inset-0" />
           {props.title}
         </h3>

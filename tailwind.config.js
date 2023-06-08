@@ -24,8 +24,9 @@ export const theme = {
       },
     },
     fontFamily: {
-      sans: ["var(--font-inter)", ..._fontFamily.sans],
+      // sans: ["var(--font-inter)", ..._fontFamily.sans],
       display: ["var(--font-calsans)"],
+      defaultFont: ["var(--default-font)", ..._fontFamily.sans],
     },
     backgroundImage: {
       "gradient-radial":
