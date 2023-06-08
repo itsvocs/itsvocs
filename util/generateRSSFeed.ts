@@ -4,7 +4,7 @@ import fs from "fs";
 
 export default async function generateRssFeed() {
   //  const site_url = process.env.DOMAIN;
-  const site_url = "localhost:3000";
+  const site_url = process.env.DOMAIN || "itsvocs.com";
 
   const postMetadata = getPostMetadata();
 
