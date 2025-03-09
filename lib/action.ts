@@ -10,15 +10,15 @@ const FormSchema = z.object({
   id: z.number(),
   email: z
     .string()
-    .email({ message: "Eine gültige E-Mail-Adresse ist erforderlich." })
+    .email({ message: "A valid Email is required." })
     .refine(validateEmailAddress, {
-      message:
-        "E-Mail entspricht nicht den benutzerdefinierten Validierungsregeln",
+      message: "Email does not meet custom validation rules",
     }),
   isSubscribed: z.boolean(),
 });
 
 const CreateSubscriber = FormSchema.omit({ id: true, isSubscribed: true });
+
 export type State = {
   errors?: {
     email?: string[];
@@ -34,7 +34,7 @@ export async function createSubscriber(prevState: State, formData: FormData) {
   if (!validatedField.success) {
     return {
       errors: validatedField.error.flatten().fieldErrors,
-      message: "E-Mail-Adresse ist erforderlich",
+      message: "Email is Required",
     };
   }
 
@@ -47,7 +47,7 @@ export async function createSubscriber(prevState: State, formData: FormData) {
       },
     });
     revalidatePath("/");
-    return { message: "Vielen Dank für Ihre Anmeldung!" };
+    return { message: "Thank you for Subscribing!" };
   } catch (error) {
     if (error) {
       if (error instanceof Prisma.PrismaClientKnownRequestError) {
@@ -63,11 +63,13 @@ export async function createSubscriber(prevState: State, formData: FormData) {
   }
 }
 
-//! Server Action Like Button
+// Server Action Like Button
+
 interface UpdateLikesParams {
   slug: string;
   action: "increment" | "decrement";
 }
+
 export async function updateLikes({
   slug,
   action,
@@ -89,7 +91,8 @@ export async function updateLikes({
   }
 }
 
-//? Add a Feedback
+// Add a Feedback
+
 type StateFeedBack = {
   errors?: {
     rating?: string[];
@@ -161,15 +164,4 @@ export async function newFeedBack(
       message: "Database error occurred.",
     };
   }
-}
-
-// ? Filter by Category
-export async function getCategories() {
-  const categories = await db.blog.findMany({
-    select: {
-      category: true,
-    },
-    distinct: ["category"],
-  });
-  return categories.map((c) => c.category);
 }

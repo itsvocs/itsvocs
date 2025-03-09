@@ -26,6 +26,7 @@ function getMDXData(dir: string) {
     };
   });
 }
+
 export function getBlogPosts() {
   return getMDXData(path.join(process.cwd(), "app", "blog", "contents"));
 }
@@ -87,39 +88,21 @@ export function formatDate(date: string, includeRelative: boolean): string {
 export async function validateEmailAddress(
   emailAddress: string
 ): Promise<boolean> {
-  // Liste étendue des domaines temporaires ou invalides
   const invalidDomains = [
     "tempmail.com",
     "example.com",
     "email.com",
     "test.com",
-    "disposable.com",
-    "mailinator.com",
-    "10minutemail.com",
-    "yopmail.com",
-    "guerrillamail.com",
   ];
-
-  // Vérification du format de base de l'email
-  if (!emailAddress || !emailAddress.includes("@")) {
-    return false;
-  }
 
   const [, domain] = emailAddress.split("@");
 
-  // Vérification du domaine
-  if (
-    !domain ||
-    domain.trim() === "" ||
-    invalidDomains.includes(domain.toLowerCase())
-  ) {
-    console.log("Le domaine appartient aux emails interdits ou est invalide");
+  if (!domain || invalidDomains.includes(domain)) {
+    console.log("Le domaine appartient aux emails interdits");
     return false;
   }
 
   try {
-    // Vérification des enregistrements MX
-    const dns = require("dns").promises;
     const mxRecords = await dns.resolveMx(domain);
 
     if (!mxRecords || mxRecords.length === 0) {
@@ -129,8 +112,8 @@ export async function validateEmailAddress(
     return true;
   } catch (error: unknown) {
     console.error(
-      `Fehler bei der Überprüfung der Domain: ${
-        error instanceof Error ? error.message : "Erreur inconnue"
+      `Erreur lors de la résolution MX: ${
+        (error as NodeJS.ErrnoException).code
       }`
     );
     return false;

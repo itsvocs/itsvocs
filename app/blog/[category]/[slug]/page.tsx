@@ -30,10 +30,12 @@ export function generateMetadata({
     title,
     publishedAt: publishedTime,
     summary: description,
-    img,
+    image,
   } = post.metadata;
 
-  const ogImage = img ? img : `${baseUrl}/social/website.png`;
+  const ogImage = image
+    ? image
+    : `${baseUrl}/og?title=${encodeURIComponent(title)}`;
 
   return {
     title,
@@ -44,13 +46,13 @@ export function generateMetadata({
       type: "article",
       publishedTime,
       url: `${baseUrl}/blog/${post?.metadata.category}/${post?.slug}}`,
-      image: [{ url: ogImage }],
+      images: [{ url: ogImage }],
     },
     twitter: {
       card: "summary_large_image",
       title,
       description,
-      image: [ogImage],
+      images: [ogImage],
     },
   };
 }
@@ -95,7 +97,7 @@ export default async function page({
               url: `${baseUrl}/blog/${post.metadata.category}/${post.slug}`,
               author: {
                 "@type": "Person",
-                name: "Vocs Pouani",
+                name: "Coding Jitsu Blog",
               },
             }),
           }}
@@ -147,6 +149,7 @@ export default async function page({
           initialLike={article?.likes ?? 0}
           category={post.metadata.category}
         />
+        <NewsLetter />
       </div>
     </div>
   );
