@@ -4,6 +4,7 @@ import image from "../icons/itsvocs.png";
 import TechComponent from "../ui/home/TechComponent";
 import { Button } from "@/components/ui/button";
 import { Metadata } from "next";
+import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Über Vocs Pouani | Medizinische Informatik & KI-Entwicklung",
@@ -68,8 +69,9 @@ export default function About() {
               inspirieren und die ich für relevant halte.
             </p>
             <div className="inline-flex items-center gap-2 mt-8">
-              <Button variant="ghost">Meine Projekte</Button>
-              <Button>Lebenslauf herunterladen</Button>
+              <Button className="rounded-full">
+                <Link href="/project">Meine Projekte ansehen</Link>
+              </Button>
             </div>
           </div>
         </div>

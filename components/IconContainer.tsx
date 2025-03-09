@@ -5,7 +5,15 @@ import { twMerge } from "tailwind-merge";
 import { motion } from "framer-motion";
 import Image from "next/image";
 
-export const IconContainer = ({ src, text, delay }: any) => {
+export const IconContainer = ({
+  src,
+  text,
+  delay,
+}: {
+  src: string;
+  text: string;
+  delay: number;
+}) => {
   return (
     <motion.div
       initial={{

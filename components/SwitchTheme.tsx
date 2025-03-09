@@ -7,7 +7,7 @@ import { Moon, SunDim } from "@phosphor-icons/react";
 
 export default function SwitchThemeComponent() {
   const id = useId();
-  const { theme, setTheme, resolvedTheme } = useTheme();
+  const { setTheme, resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
 
