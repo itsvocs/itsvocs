@@ -1,12 +1,12 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { ThumbsUpIcon } from "lucide-react";
 import ShareComponent from "./Share";
 import FeedComponent from "./Feed";
 import { useEffect, useState, useTransition } from "react";
 import { updateLikes } from "@/lib/action";
 import { cn } from "@/lib/utils";
+import { ThumbsUp } from "@phosphor-icons/react";
 
 export default function Feedback({
   slug,
@@ -76,7 +76,8 @@ export default function Feedback({
             variant="outline"
             onClick={handleLikeToggle}
             disabled={isPending}>
-            <ThumbsUpIcon
+            <ThumbsUp
+              weight="bold"
               className="opacity-60 "
               size={16}
               aria-hidden="true"

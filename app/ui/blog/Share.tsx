@@ -14,14 +14,16 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import {
-  RiCodeFill,
-  RiFacebookFill,
-  RiMailLine,
-  RiTwitterXFill,
-} from "@remixicon/react";
-import { CheckIcon, CopyIcon, Share } from "lucide-react";
 import { useId, useRef, useState } from "react";
+import {
+  Check,
+  CopySimple,
+  Envelope,
+  FacebookLogo,
+  InstagramLogo,
+  ShareFat,
+  XLogo,
+} from "@phosphor-icons/react";
 
 export default function ShareComponent({
   slug,
@@ -49,33 +51,68 @@ export default function ShareComponent({
       <Popover>
         <PopoverTrigger asChild>
           <Button variant="outline" size="icon" className="rounded-full">
-            <Share />
+            <ShareFat weight="duotone" size={18} />
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-72">
           <div className="flex flex-col gap-3 text-center">
             <div className="text-sm font-medium">Share the page</div>
             <div className="flex flex-wrap justify-center gap-2">
-              <Button size="icon" variant="outline" aria-label="Embed">
-                <RiCodeFill size={16} aria-hidden="true" />
+              <Button
+                size="icon"
+                variant="outline"
+                aria-label="Share on Instagram"
+                onClick={() =>
+                  window.open(
+                    `https://www.instagram.com/share?url=${encodeURIComponent(
+                      shareUrl
+                    )}`,
+                    "_blank"
+                  )
+                }>
+                <InstagramLogo weight="bold" size={16} aria-hidden="true" />
               </Button>
               <Button
                 size="icon"
                 variant="outline"
-                aria-label="Share on Twitter">
-                <RiTwitterXFill size={16} aria-hidden="true" />
+                aria-label="Share on Twitter"
+                onClick={() =>
+                  window.open(
+                    `https://twitter.com/intent/tweet?url=${encodeURIComponent(
+                      shareUrl
+                    )}`,
+                    "_blank"
+                  )
+                }>
+                <XLogo size={16} weight="duotone" aria-hidden="true" />
               </Button>
               <Button
                 size="icon"
                 variant="outline"
-                aria-label="Share on Facebook">
-                <RiFacebookFill size={16} aria-hidden="true" />
+                aria-label="Share on Facebook"
+                onClick={() =>
+                  window.open(
+                    `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
+                      shareUrl
+                    )}`,
+                    "_blank"
+                  )
+                }>
+                <FacebookLogo weight="bold" size={16} aria-hidden="true" />
               </Button>
               <Button
                 size="icon"
                 variant="outline"
-                aria-label="Share via email">
-                <RiMailLine size={16} aria-hidden="true" />
+                aria-label="Share via email"
+                onClick={() =>
+                  window.open(
+                    `mailto:?subject=Check out this article&body=${encodeURIComponent(
+                      shareUrl
+                    )}`,
+                    "_blank"
+                  )
+                }>
+                <Envelope weight="duotone" size={16} aria-hidden="true" />
               </Button>
             </div>
             <div className="space-y-2">
@@ -104,8 +141,9 @@ export default function ShareComponent({
                               ? "scale-100 opacity-100"
                               : "scale-0 opacity-0"
                           )}>
-                          <CheckIcon
-                            className="stroke-emerald-500"
+                          <Check
+                            weight="bold"
+                            className="stroke-emerald-500 text-emerald-500"
                             size={16}
                             aria-hidden="true"
                           />
@@ -117,7 +155,11 @@ export default function ShareComponent({
                               ? "scale-0 opacity-0"
                               : "scale-100 opacity-100"
                           )}>
-                          <CopyIcon size={16} aria-hidden="true" />
+                          <CopySimple
+                            weight="bold"
+                            size={16}
+                            aria-hidden="true"
+                          />
                         </div>
                       </button>
                     </TooltipTrigger>

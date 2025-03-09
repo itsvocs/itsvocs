@@ -30,12 +30,10 @@ export function generateMetadata({
     title,
     publishedAt: publishedTime,
     summary: description,
-    image,
+    img,
   } = post.metadata;
 
-  const ogImage = image
-    ? image
-    : `${baseUrl}/og?title=${encodeURIComponent(title)}`;
+  const ogImage = img ? img : `/social/website.png`;
 
   return {
     title,
@@ -97,7 +95,7 @@ export default async function page({
               url: `${baseUrl}/blog/${post.metadata.category}/${post.slug}`,
               author: {
                 "@type": "Person",
-                name: "Coding Jitsu Blog",
+                name: "Vocs Pouani",
               },
             }),
           }}

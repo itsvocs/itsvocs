@@ -83,7 +83,7 @@ export default function SearchProject() {
         <Input
           id={id}
           className="peer ps-9 pe-9"
-          placeholder="Rechercher des blogs..."
+          placeholder="Projekte durchsuchen..."
           type="search"
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}

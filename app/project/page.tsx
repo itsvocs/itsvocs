@@ -1,5 +1,4 @@
 "use client";
-import { NewsLetter } from "../ui/home/NewsLetter";
 import ProjectCard from "../ui/project/ProjectCard";
 import SearchProject from "../ui/SearchProject";
 import { useEffect, useState } from "react";
