@@ -64,4 +64,4 @@ export const SOCIAL = [
   },
 ];
 
-export const GITHUB_TOKEN = "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";
+export const GITHUB = "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";
