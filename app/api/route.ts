@@ -16,7 +16,7 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
-  const { slug, title, category } = await request.json();
+  const { slug, title, category, summary } = await request.json();
 
   try {
     const existingPost = await db.blog.findUnique({
@@ -36,6 +36,7 @@ export async function POST(request: Request) {
           slug: slug,
           title: title,
           category: category,
+          summary: summary,
         },
       });
     }

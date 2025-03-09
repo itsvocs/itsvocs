@@ -26,7 +26,6 @@ function getMDXData(dir: string) {
     };
   });
 }
-
 export function getBlogPosts() {
   return getMDXData(path.join(process.cwd(), "app", "blog", "contents"));
 }
@@ -39,70 +38,101 @@ export function getPrivacyPolicy() {
   return getMDXData(path.join(process.cwd(), "src", "app", "privacy-policy"));
 }
 
-export function formatDate(date: string, includeRelative = false) {
+export function formatDate(date: string, includeRelative: boolean): string {
   const currentDate = new Date();
+
+  // Ensure the date includes a time component
   if (!date.includes("T")) {
     date = `${date}T00:00:00`;
   }
 
   const targetDate = new Date(date);
+  const diff = currentDate.getTime() - targetDate.getTime();
 
-  const yearsAgo = currentDate.getFullYear() - targetDate.getFullYear();
-  const monthsAgo = currentDate.getMonth() - targetDate.getMonth();
-  const daysAgo = currentDate.getDate() - targetDate.getDate();
+  const secondsAgo = Math.floor(diff / 1000);
+  const minutesAgo = Math.floor(secondsAgo / 60);
+  const hoursAgo = Math.floor(minutesAgo / 60);
+  const daysAgo = Math.floor(hoursAgo / 24);
+  const weeksAgo = Math.floor(daysAgo / 7);
+  const monthsAgo = Math.floor(daysAgo / 30.44); // Approximate average days per month
+  const yearsAgo = Math.floor(monthsAgo / 12);
 
   let formattedDate = "";
 
-  if (yearsAgo > 0) {
-    formattedDate = `${yearsAgo}y ago`;
-  } else if (monthsAgo > 0) {
-    formattedDate = `${monthsAgo}mo ago`;
-  } else if (daysAgo > 0) {
-    formattedDate = `${daysAgo}d ago`;
+  if (secondsAgo < 60) {
+    formattedDate = `${secondsAgo} second${secondsAgo > 1 ? "s" : ""} ago`;
+  } else if (minutesAgo < 60) {
+    formattedDate = `${minutesAgo} minute${minutesAgo > 1 ? "s" : ""} ago`;
+  } else if (hoursAgo < 24) {
+    formattedDate = `${hoursAgo} hour${hoursAgo > 1 ? "s" : ""} ago`;
+  } else if (daysAgo < 7) {
+    formattedDate = `${daysAgo} day${daysAgo > 1 ? "s" : ""} ago`;
+  } else if (weeksAgo < 4) {
+    formattedDate = `${weeksAgo} week${weeksAgo > 1 ? "s" : ""} ago`;
+  } else if (monthsAgo < 12) {
+    formattedDate = `${monthsAgo} month${monthsAgo > 1 ? "s" : ""} ago`;
   } else {
-    formattedDate = "Today";
+    formattedDate = `${yearsAgo} year${yearsAgo > 1 ? "s" : ""} ago`;
   }
 
-  const fullDate = targetDate.toLocaleString("en-us", {
+  const fullDate = targetDate.toLocaleDateString("en-US", {
     month: "long",
     day: "numeric",
     year: "numeric",
   });
 
-  if (!includeRelative) {
-    return fullDate;
-  }
-
-  return `${fullDate} (${formattedDate})`;
+  return includeRelative ? `${formattedDate}` : fullDate;
 }
 
-export async function validateEmailAddress(emailAddress: string) {
+export async function validateEmailAddress(
+  emailAddress: string
+): Promise<boolean> {
+  // Liste étendue des domaines temporaires ou invalides
   const invalidDomains = [
     "tempmail.com",
     "example.com",
     "email.com",
-    "eamil.com",
     "test.com",
+    "disposable.com",
+    "mailinator.com",
+    "10minutemail.com",
+    "yopmail.com",
+    "guerrillamail.com",
   ];
-  // const [user, domain] = emailAddress.split("@");
-  const [domain] = emailAddress.split("@");
 
-  // Example custom logic: Ensure domain exists and isn't blacklisted
-  if (invalidDomains.includes(domain)) {
-    return false; // Invalid if domain is blacklisted
+  // Vérification du format de base de l'email
+  if (!emailAddress || !emailAddress.includes("@")) {
+    return false;
+  }
+
+  const [, domain] = emailAddress.split("@");
+
+  // Vérification du domaine
+  if (
+    !domain ||
+    domain.trim() === "" ||
+    invalidDomains.includes(domain.toLowerCase())
+  ) {
+    console.log("Le domaine appartient aux emails interdits ou est invalide");
+    return false;
   }
 
   try {
+    // Vérification des enregistrements MX
+    const dns = require("dns").promises;
     const mxRecords = await dns.resolveMx(domain);
 
     if (!mxRecords || mxRecords.length === 0) {
+      console.log("Aucun enregistrement MX trouvé pour le domaine");
       return false;
     }
     return true;
   } catch (error: unknown) {
-    if (error instanceof Error) {
-      console.error(error.message);
-    }
+    console.error(
+      `Fehler bei der Überprüfung der Domain: ${
+        error instanceof Error ? error.message : "Erreur inconnue"
+      }`
+    );
     return false;
   }
 }

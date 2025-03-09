@@ -33,3 +33,33 @@ export const POSTS: { title: string; href: string; description: string }[] = [
       "A popup that displays information related to an element when the element receives keyboard focus or the mouse hovers over it.",
   },
 ];
+
+export const NAVIGATIONS = [
+  {
+    name: "Blogs",
+    link: "/blog",
+  },
+  {
+    name: "Projekte",
+    link: "/project",
+  },
+  {
+    name: "Über mich",
+    link: "/about",
+  },
+];
+
+export const SOCIAL = [
+  {
+    name: "Twitter",
+    link: "https://x.com/itsvocs",
+  },
+  {
+    name: "Github",
+    link: "https://github.com/itsvocs",
+  },
+  {
+    name: "LinkedIn",
+    link: "https://github.com/itsvocs",
+  },
+];

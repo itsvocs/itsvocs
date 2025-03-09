@@ -2,9 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-  font-family: Arial, Helvetica, sans-serif;
-}
+@plugin "@tailwindcss/typography";
 
 @layer utilities {
   .text-balance {
@@ -93,34 +91,10 @@ body {
   }
 }
 
-/* Blog Style  */
-
-.prose .anchor {
-  @apply absolute invisible no-underline;
-
-  margin-left: -1em;
-  padding-right: 0.5em;
-  width: 80%;
-  max-width: 700px;
-  cursor: pointer;
+body {
+  @apply dark:bg-black;
 }
-
-.anchor:hover {
-  @apply visible;
-}
-
-.prose a {
-  @apply underline transition-all decoration-neutral-400 dark:decoration-neutral-600 underline-offset-2 decoration-[0.1em];
-}
-
-.prose .anchor:after {
-  @apply text-neutral-300 dark:text-neutral-700;
-  content: "#";
-}
-
-.prose *:hover > .anchor {
-  @apply visible;
-}
+/*? Blog Style  */
 
 .prose pre {
   @apply bg-neutral-50 dark:bg-neutral-900 rounded-lg overflow-x-auto border border-neutral-200 dark:border-neutral-900 py-2 px-3 text-sm;
@@ -145,24 +119,16 @@ body {
   @apply m-0;
 }
 
-.prose p {
-  @apply my-4 text-neutral-800 dark:text-neutral-200;
-}
-
 .prose h1 {
-  @apply text-4xl font-medium tracking-tight mt-6 mb-2;
+  @apply text-4xl font-medium;
 }
 
 .prose h2 {
-  @apply text-xl font-medium tracking-tight mt-6 mb-2;
+  @apply text-2xl font-bold;
 }
 
 .prose h3 {
-  @apply text-xl font-medium tracking-tight mt-6 mb-2;
-}
-
-.prose h4 {
-  @apply text-lg font-medium tracking-tight mt-6 mb-2;
+  @apply text-xl font-semibold;
 }
 
 .prose strong {
@@ -181,6 +147,13 @@ body {
   /* Override removing top margin, causing layout shift */
   margin-top: 1.25em !important;
   margin-bottom: 1.25em !important;
+}
+.blockquote {
+  @apply !bg-transparent rounded-none m-0;
+}
+
+.blockquote p {
+  @apply m-0;
 }
 
 pre::-webkit-scrollbar {
@@ -214,4 +187,21 @@ table {
 .blockquote > #note::before {
   content: "#";
   padding: 5px;
+}
+
+:root {
+  --background-color: #ffffff; /* Default light mode color */
+}
+
+[data-theme="dark"] {
+  --background-color: #000000; /* Dark mode color */
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
 }

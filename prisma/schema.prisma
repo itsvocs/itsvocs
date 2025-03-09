@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -20,8 +14,50 @@ model Blog {
   slug        String    @unique
   title       String
   category    String
+  summary     String    @default("")
   view_count  Int       @default(1)
-  updatedAt   DateTime  @default(now())    
+  updatedAt   DateTime  @default(now())   
+  likes       Int       @default(0) 
+  Reviews     Review[]
+  project     Project?
+
+  @@index([summary])
+  @@index([category])
+}
+
+
+model Project {
+  id          Int       @id @default(autoincrement())
+  name        String    @unique
+  image       String    
+  video       String 
+  description String
+  category    String 
+  technologie String[]
+  link        String?
+  github      String @default("https://github.com/itsvocs")
+
+    // Nouvelles propriétés pour les données GitHub
+  githubStars    Int       @default(0)
+  githubForks    Int       @default(0)
+  githubWatchers Int       @default(0)
+  githubIssues   Int       @default(0)
+  lastUpdated    DateTime  @default(now())
+  
+  blog        Blog?     @relation(fields: [blogId], references: [id])
+  blogId      Int?      @unique
+}
+
+
+
+model Review {
+  id          Int       @id @default(autoincrement())
+  rating      Int    
+  message     String
+  article     Blog      @relation(fields: [articleId], references: [id])
+  articleId   Int
+
+   @@index([articleId, rating])
 }
 
 model Subscriber {
