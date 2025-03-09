@@ -5,7 +5,6 @@ import ReportViews from "@/components/ReportViews";
 import { baseUrl } from "@/app/sitemap";
 import Image from "next/image";
 import Feedback from "@/app/ui/blog/Feedback";
-import { NewsLetter } from "@/app/ui/home/NewsLetter";
 import { db } from "@/db";
 
 export async function generateStaticParams() {
@@ -147,7 +146,6 @@ export default async function page({
           initialLike={article?.likes ?? 0}
           category={post.metadata.category}
         />
-        <NewsLetter />
       </div>
     </div>
   );

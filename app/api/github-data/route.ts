@@ -20,10 +20,8 @@ export async function GET(request: NextRequest) {
     const response = await fetch(`https://api.github.com/repos/${repoPath}`, {
       headers: {
         Accept: "application/vnd.github.v3+json",
-        // Si vous avez un token GitHub, décommentez la ligne suivante
         Authorization: `token ${process.env.GITHUB_TOKEN}`,
       },
-      // Utiliser la mise en cache pour réduire les appels à l'API
       next: { revalidate: 3600 }, // Revalidation après 1 heure
     });
 
