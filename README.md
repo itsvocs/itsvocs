@@ -1,72 +1,36 @@
-# ITSVOCS
+This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-## Table des matières
+## Getting Started
 
-* [ITSVOCS](#itsvocs)
-  * [Table des matières](#table-des-matières)
-  * [Aperçu](#aperçu)
-  * [Fonctionnalités](#fonctionnalités)
-  * [Capture d'écran](#capture-décran)
-  * [Installation](#installation)
-  * [Configuration](#configuration)
-  * [Contribuer](#contribuer)
-  * [Ressources](#ressources)
-  * [Auteur](#auteur)
-  * [Licence](#licence)
+First, run the development server:
 
-## Aperçu
+```bash
+npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+# or
+bun dev
+```
 
-itsvocs.com est mon site internet personel me permettant non seulement de me presenter au monde à travers divers thématiques et mes passions qui génère plusieurs places notamment la page Blog où je publie regulierement sur les avancées technologies et la medecine moderne.
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-Le projet reste ouvert à tout esprit ouvert et curieux voulant juste copier le code source à des fins non-comerciale et en respectant les termes de la GNU General Public License (GPL)
+You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-## Fonctionnalités
+This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-* pages d'acceuil
-* A propos
-* blog
-* contact
-* Chat et commentaire de blog
+## Learn More
 
-## Capture d'écran
+To learn more about Next.js, take a look at the following resources:
 
-![Capture d'écran du site/blog](/chemin/vers/capture.png)
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-## Installation
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
-\[Expliquez comment installer et configurer votre projet localement.]
+## Deploy on Vercel
 
-1. Clonez ce référentiel : Ouvrez votre terminal et naviguez vers le répertoire dans lequel vous souhaitez cloner le projet. Ensuite, exécutez la commande suivante en remplaçant`git clone https://github.com/itsvocs/itsvocs.git` par l'URL du référentiel GitHub que vous souhaitez cloner :
-2. Naviguez vers le répertoire du projet : `cd itsvocs`
-3. Installez les dépendances : `npm install`
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-## Configuration
-
-installation suplementaire:
-
-1. firebase: vous devriez creer une base de donnée firebase/firestore pour activer toutes les fonctionnalitées et modifier votre fichier .env.local avec vos données de config firebase.
-
-## Contribuer
-
-1. Fork ce référentiel
-2. Créez une branche pour votre fonctionnalité : `git checkout -b nouvelle-fonctionnalité`
-3. Committez vos modifications : `git commit -m 'Ajouter une nouvelle fonctionnalité'`
-4. Poussez vers la branche : `git push origin nouvelle-fonctionnalité`
-5. Soumettez une demande de pull
-
-## Ressources
-
-Les liens utilses pour comprendre et appliquer le projet:
-
-1. [documentation firebase firestore](https://firebase.google.com/docs/firestore?hl=fr)
-2. [documentation next js 13 avec App directory](https://nextjs.org/docs)
-3. [documentation react-hook-form](https://react-hook-form.com/get-started)
-
-## Auteur
-
-Vocs Pouani
-<pouanivocs@gmail.com>
-
-## Licence
-
-Licences GPL...
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
