@@ -1,6 +1,7 @@
 // app/api/github-data/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
+import { GITHUB_TOKEN } from "@/lib/constants/constants";
 
 const prisma = new PrismaClient();
 
@@ -21,7 +22,7 @@ export async function GET(request: NextRequest) {
       headers: {
         Accept: "application/vnd.github.v3+json",
         // Si vous avez un token GitHub, décommentez la ligne suivante
-        Authorization: `token ${process.env.GITHUB_TOKEN}`,
+        Authorization: `token ${GITHUB_TOKEN}`,
       },
       // Utiliser la mise en cache pour réduire les appels à l'API
       next: { revalidate: 3600 }, // Revalidation après 1 heure

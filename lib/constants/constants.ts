@@ -63,3 +63,5 @@ export const SOCIAL = [
     link: "https://github.com/itsvocs",
   },
 ];
+
+export const GITHUB_TOKEN = "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";
