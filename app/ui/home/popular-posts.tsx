@@ -10,6 +10,7 @@ export default function PopularPosts() {
   const { data, error, isLoading } = useSWR(fetchUrl, fetcher);
 
   if (error) return;
+
   if (isLoading)
     return <p className="animate-pulse text-muted-foreground">Loading...</p>;
 

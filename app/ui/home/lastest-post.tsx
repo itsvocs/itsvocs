@@ -57,7 +57,7 @@ export default function LastestPosts() {
                   {formatDate(i.metadata.publishedAt, true)}
                 </time>
                 <Link
-                  href={`/blog/${i.slug}`}
+                  href={`/blog/${i.metadata.category}/${i.slug}`}
                   className="flex items-center text-muted-foreground group-hover:text-foreground transition-colors">
                   <span className="absolute inset-0 "></span>
                   weiter lesen{" "}
