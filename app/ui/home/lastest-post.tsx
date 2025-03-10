@@ -82,7 +82,7 @@ export default function LastestPosts() {
                 <li key={j} className="py-8">
                   <dl className="relative flex flex-wrap gap-x-3 group">
                     <dd className="w-full flex flex-wrap font-semibold tracking-tight text-foreground items-center gap-x-3">
-                      <Link href={`/blog/${i.slug}`}>
+                      <Link href={`/blog/${i.metadata.category}/${i.slug}`}>
                         <span className="absolute inset-0"></span>
                         {i.metadata.title}
                       </Link>
