@@ -36,7 +36,7 @@ export default function ShareComponent({
   const [copied, setCopied] = useState<boolean>(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const shareUrl = `https://itsvocs.me/blog/${category}/${slug}`;
+  const shareUrl = `https://itsvocs.com/blog/${category}/${slug}`;
 
   const handleCopy = () => {
     if (inputRef.current) {
@@ -56,7 +56,7 @@ export default function ShareComponent({
         </PopoverTrigger>
         <PopoverContent className="w-72">
           <div className="flex flex-col gap-3 text-center">
-            <div className="text-sm font-medium">Share the page</div>
+            <div className="text-sm font-medium">Seite teilen</div>
             <div className="flex flex-wrap justify-center gap-2">
               <Button
                 size="icon"

@@ -4,6 +4,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import Footer from "./ui/footer";
 import { MainNav } from "./ui/nav/main-vav";
 import { Outfit, Inter } from "next/font/google";
+import { Analytics } from "@vercel/analytics/react";
 
 const fontSans = Inter({
   subsets: ["latin"],
@@ -66,6 +67,7 @@ export default function RootLayout({
           <main className="">{children}</main>
           <Footer />
         </ThemeProvider>
+        <Analytics />
       </body>
     </html>
   );
