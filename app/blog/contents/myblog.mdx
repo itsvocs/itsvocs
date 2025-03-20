@@ -1,0 +1,778 @@
+---
+title: "Mein Weg zur Entwicklung einer modernen Portfolio-Website mit Blog-Funktionalität"
+publishedAt: "2025-03-21"
+summary: "Ein detaillierter Einblick in die Entwicklung meiner Portfolio-Website mit Blog-Funktionalität, technische Implementierungsdetails und Code-Beispiele."
+category: "web"
+img: "/social/website.png"
+duration: 18
+---
+
+import CodeBlock from "../../components/CodeBlock";
+import BlogImage from "../../components/BlogImage";
+import NewsletterForm from "../../components/NewsletterForm";
+
+# Mein Weg zur Entwicklung einer modernen Portfolio-Website mit Blog-Funktionalität
+
+## Einleitung
+
+Als Entwickler und Content-Creator war es mir wichtig, eine eigene Plattform zu haben, die nicht nur meine Projekte präsentiert, sondern auch einen Raum bietet, in dem ich meine Gedanken, Erkenntnisse und Erfahrungen teilen kann. Nach monatelanger Planung und Entwicklung freue ich mich, euch heute einen Einblick in die Entstehung meiner Portfolio-Website mit integrierter Blog-Funktionalität zu geben.
+
+In diesem Artikel möchte ich euch durch die wichtigsten Aspekte meiner Website führen – von der Architekturentscheidung über die Implementierung des Content Management Systems bis hin zu Performance-Optimierungen und Responsive Design. Ich werde konkrete Code-Beispiele teilen und erklären, welche Herausforderungen ich bewältigen musste und welche Lösungen ich gefunden habe.
+
+Dieser Artikel richtet sich hauptsächlich an Entwickler, die ihre eigene
+Portfolio-Website mit Blog-Funktionalität erstellen möchten. Alle
+Code-Beispiele sind frei verwendbar und können an eure eigenen Projekte
+angepasst werden.
+
+## Die Technologie-Stack-Entscheidung
+
+Nach sorgfältiger Überlegung entschied ich mich für folgenden Tech-Stack:
+
+- **Frontend**: React.js mit Next.js als Framework
+- **Backend**: Next.js API Routes
+- **Styling**: Tailwind CSS für schnelles, responsives Design
+- **Content Management**: Markdown mit MDX für interaktive Komponenten
+- **Datenbank**: MongoDB für flexible Dokumentenspeicherung
+- **Deployment**: Vercel für nahtlose Integration mit Next.js
+
+Die Entscheidung für Next.js war besonders wichtig, da es Server-Side Rendering (SSR) und Static Site Generation (SSG) ermöglicht, was für SEO und Performance entscheidend ist.
+
+<BlogImage
+  src="/images/blog/tech-stack-diagram.png"
+  alt="Visualisierung meines Technology Stacks"
+  className="my-8"
+/>
+
+## Das Herzstück: Blog-Implementierung mit Markdown und MDX
+
+Der Blog-Bereich war definitiv eine der spannendsten Herausforderungen. Ich wollte eine Lösung, die einfaches Schreiben ermöglicht, aber gleichzeitig die Flexibilität bietet, interaktive Elemente einzubinden.
+
+### Dateisystem-basiertes Content Management
+
+Anstatt ein komplexes CMS aufzusetzen, habe ich mich für einen dateisystembasierten Ansatz entschieden. Alle Blog-Beiträge werden als Markdown-Dateien im Projektverzeichnis gespeichert:
+
+```javascript
+// lib/api.js
+import fs from "fs";
+import path from "path";
+import matter from "gray-matter";
+
+const postsDirectory = path.join(process.cwd(), "content/posts");
+
+export function getPostSlugs() {
+  return fs.readdirSync(postsDirectory);
+}
+
+export function getPostBySlug(slug, fields = []) {
+  const realSlug = slug.replace(/\.md$/, "");
+  const fullPath = path.join(postsDirectory, `${realSlug}.md`);
+  const fileContents = fs.readFileSync(fullPath, "utf8");
+  const { data, content } = matter(fileContents);
+
+  const items = {};
+
+  // Nur benötigte Felder zurückgeben
+  fields.forEach((field) => {
+    if (field === "slug") {
+      items[field] = realSlug;
+    }
+    if (field === "content") {
+      items[field] = content;
+    }
+    if (field === "date") {
+      items[field] = data.date;
+    }
+
+    if (data[field]) {
+      items[field] = data[field];
+    }
+  });
+
+  return items;
+}
+
+export function getAllPosts(fields = []) {
+  const slugs = getPostSlugs();
+  const posts = slugs
+    .map((slug) => getPostBySlug(slug, fields))
+    // Nach Datum sortieren
+    .sort((post1, post2) => (post1.date > post2.date ? -1 : 1));
+  return posts;
+}
+```
+
+### MDX für interaktive Blog-Posts
+
+Um meine Blog-Posts mit interaktiven React-Komponenten anzureichern, integrierte ich MDX:
+
+```javascript
+// pages/blog/[slug].js
+import { MDXRemote } from "next-mdx-remote";
+import { serialize } from "next-mdx-remote/serialize";
+import { getPostBySlug, getAllPosts } from "../../lib/api";
+import CodeBlock from "../../components/CodeBlock";
+import Image from "next/image";
+
+// Benutzerdefinierte Komponenten für MDX
+const components = {
+  pre: CodeBlock,
+  img: (props) => (
+    <div className="my-6">
+      <Image
+        {...props}
+        width={800}
+        height={500}
+        layout="responsive"
+        loading="lazy"
+        className="rounded-lg"
+      />
+    </div>
+  ),
+};
+
+export default function Post({ post }) {
+  return (
+    <article className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+      <h1 className="text-4xl font-bold mb-4">{post.title}</h1>
+      <div className="mb-8 text-gray-500">
+        {new Date(post.date).toLocaleDateString("de-DE", {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        })}
+        {post.readingTime && ` · ${post.readingTime} Min Lesezeit`}
+      </div>
+
+      <div className="prose prose-lg max-w-none">
+        <MDXRemote {...post.content} components={components} />
+      </div>
+    </article>
+  );
+}
+
+export async function getStaticProps({ params }) {
+  const post = getPostBySlug(params.slug, [
+    "title",
+    "date",
+    "slug",
+    "author",
+    "content",
+    "coverImage",
+    "excerpt",
+  ]);
+
+  const mdxSource = await serialize(post.content, {
+    // MDX-Optionen
+    mdxOptions: {
+      remarkPlugins: [
+        require("remark-slug"),
+        require("remark-autolink-headings"),
+      ],
+      rehypePlugins: [require("rehype-prism-plus")],
+    },
+  });
+
+  return {
+    props: {
+      post: {
+        ...post,
+        content: mdxSource,
+      },
+    },
+  };
+}
+
+export async function getStaticPaths() {
+  const posts = getAllPosts(["slug"]);
+
+  return {
+    paths: posts.map((post) => {
+      return {
+        params: {
+          slug: post.slug,
+        },
+      };
+    }),
+    fallback: false,
+  };
+}
+```
+
+## Syntax Highlighting für Code-Blöcke
+
+Da ich viele Code-Beispiele in meinen Blog-Posts teile, war ein gutes Syntax-Highlighting unverzichtbar. Die Implementierung erfolgte über eine eigene CodeBlock-Komponente:
+
+```javascript
+// components/CodeBlock.js
+import React from "react";
+import Prism from "prismjs";
+import "prismjs/themes/prism-tomorrow.css";
+// Importiere benötigte Sprachen
+import "prismjs/components/prism-javascript";
+import "prismjs/components/prism-css";
+import "prismjs/components/prism-jsx";
+import "prismjs/components/prism-typescript";
+import "prismjs/components/prism-python";
+
+class CodeBlock extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
+  componentDidMount() {
+    Prism.highlightAll();
+  }
+
+  render() {
+    const { children } = this.props;
+
+    // Ermittle die Programmiersprache aus den Props
+    let language = "javascript"; // Standard
+    if (children && children.props && children.props.className) {
+      const match = /language-(\w+)/.exec(children.props.className);
+      if (match) language = match[1];
+    }
+
+    return (
+      <div className="code-block-wrapper my-6 rounded-lg overflow-hidden">
+        <div className="bg-gray-800 text-gray-200 px-4 py-2 text-sm flex justify-between items-center">
+          <span>{language}</span>
+          <button
+            onClick={() => {
+              const code = children.props.children;
+              navigator.clipboard.writeText(code);
+            }}
+            className="text-xs bg-gray-700 hover:bg-gray-600 px-2 py-1 rounded transition-colors">
+            Kopieren
+          </button>
+        </div>
+        <pre className="m-0 p-0">{children}</pre>
+      </div>
+    );
+  }
+}
+
+export default CodeBlock;
+```
+
+<InfoBox type="tip">
+  Die CodeBlock-Komponente fügt automatisch einen "Kopieren"-Button zu jedem
+  Code-Block hinzu, was die Benutzerfreundlichkeit deutlich verbessert!
+</InfoBox>
+
+## Implementierung der Kategorien und Tags
+
+Eine wichtige Funktion für meinen Blog war die Möglichkeit, Beiträge zu kategorisieren und mit Tags zu versehen. Hier ist meine Implementierung:
+
+```javascript
+// lib/categories.js
+export function getAllCategories(posts) {
+  const categoriesSet = new Set();
+
+  posts.forEach((post) => {
+    if (post.categories) {
+      post.categories.forEach((category) => {
+        categoriesSet.add(category);
+      });
+    }
+  });
+
+  return Array.from(categoriesSet);
+}
+
+// pages/category/[slug].js
+import { getAllPosts } from "../../lib/api";
+import { getAllCategories } from "../../lib/categories";
+import PostList from "../../components/PostList";
+
+export default function Category({ posts, category }) {
+  return (
+    <div className="container mx-auto px-4 py-10">
+      <h1 className="text-3xl font-bold mb-8">Kategorie: {category}</h1>
+      <PostList posts={posts} />
+    </div>
+  );
+}
+
+export async function getStaticProps({ params }) {
+  const allPosts = getAllPosts([
+    "title",
+    "date",
+    "slug",
+    "coverImage",
+    "excerpt",
+    "categories",
+  ]);
+
+  const categoryPosts = allPosts.filter(
+    (post) => post.categories && post.categories.includes(params.slug)
+  );
+
+  return {
+    props: {
+      posts: categoryPosts,
+      category: params.slug,
+    },
+  };
+}
+
+export async function getStaticPaths() {
+  const posts = getAllPosts(["categories"]);
+  const categories = getAllCategories(posts);
+
+  return {
+    paths: categories.map((category) => {
+      return {
+        params: {
+          slug: category,
+        },
+      };
+    }),
+    fallback: false,
+  };
+}
+```
+
+## Suchfunktion mit Fuse.js
+
+Eine leistungsstarke Suchfunktion ist essenziell für jeden Blog. Ich habe Fuse.js implementiert, um eine schnelle und fehlertolerante Suche zu ermöglichen:
+
+```javascript
+// components/Search.js
+import { useState, useEffect } from "react";
+import Fuse from "fuse.js";
+import Link from "next/link";
+
+export default function Search({ posts }) {
+  const [searchValue, setSearchValue] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
+  const [fuse, setFuse] = useState(null);
+
+  useEffect(() => {
+    // Fuse.js Konfiguration
+    const options = {
+      keys: ["title", "excerpt", "categories", "tags"],
+      threshold: 0.3,
+    };
+    setFuse(new Fuse(posts, options));
+  }, [posts]);
+
+  useEffect(() => {
+    if (!fuse || !searchValue) {
+      setSearchResults([]);
+      return;
+    }
+
+    const results = fuse.search(searchValue);
+    setSearchResults(results.map((result) => result.item));
+  }, [fuse, searchValue]);
+
+  return (
+    <div className="search-container mb-10">
+      <input
+        type="text"
+        placeholder="Nach Beiträgen suchen..."
+        value={searchValue}
+        onChange={(e) => setSearchValue(e.target.value)}
+        className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+      />
+
+      {searchValue.length > 0 && (
+        <div className="search-results mt-4">
+          {searchResults.length > 0 ? (
+            <ul className="space-y-4">
+              {searchResults.map((post) => (
+                <li
+                  key={post.slug}
+                  className="p-4 border rounded-lg hover:bg-gray-50">
+                  <Link href={`/blog/${post.slug}`}>
+                    <a className="block">
+                      <h3 className="text-lg font-medium">{post.title}</h3>
+                      <p className="mt-1 text-gray-600">{post.excerpt}</p>
+                    </a>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="text-gray-500">Keine Ergebnisse gefunden</p>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+```
+
+## Performance-Optimierung
+
+### Bild-Optimierung mit next/image
+
+Bilder können die Ladezeit einer Website erheblich beeinträchtigen. Mit next/image habe ich die Bildoptimierung automatisiert:
+
+```javascript
+// components/BlogImage.js
+import Image from "next/image";
+
+export default function BlogImage({ src, alt, className }) {
+  return (
+    <div
+      className={`relative h-0 ${className}`}
+      style={{ paddingBottom: "56.25%" }}>
+      <Image
+        src={src}
+        alt={alt}
+        layout="fill"
+        objectFit="cover"
+        className="rounded-lg"
+        quality={85}
+        placeholder="blur"
+        blurDataURL="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 225'%3E%3Crect width='400' height='225' fill='%23f0f0f0'/%3E%3C/svg%3E"
+      />
+    </div>
+  );
+}
+```
+
+<BlogImage
+  src="/images/blog/performance-comparison.png"
+  alt="Performance-Vergleich vor und nach der Optimierung"
+  className="my-8"
+/>
+
+### Web Vitals Optimierung
+
+Um die Core Web Vitals zu verbessern, habe ich mehrere Optimierungen vorgenommen:
+
+```javascript
+// next.config.js
+module.exports = {
+  images: {
+    domains: ["images.unsplash.com"],
+  },
+  webpack: (config, { dev, isServer }) => {
+    // Optimierungen nur für Production Build
+    if (!dev && !isServer) {
+      // Split chunks optimieren
+      config.optimization.splitChunks.cacheGroups = {
+        ...config.optimization.splitChunks.cacheGroups,
+        commons: {
+          test: /[\\/]node_modules[\\/]/,
+          name: "vendor",
+          chunks: "all",
+        },
+      };
+
+      // Preload kritische CSS
+      config.plugins.push(
+        new PreloadWebpackPlugin({
+          rel: "preload",
+          include: "initial",
+          fileBlacklist: [/\.map$/, /dynamic\//],
+        })
+      );
+    }
+
+    return config;
+  },
+};
+```
+
+## Integration eines Newsletter-Abonnements
+
+Um die Leser langfristig zu binden, habe ich ein Newsletter-Formular eingebunden, das mit Mailchimp verbunden ist:
+
+```javascript
+// components/NewsletterForm.js
+import { useState } from "react";
+
+export default function NewsletterForm() {
+  const [email, setEmail] = useState("");
+  const [status, setStatus] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      const response = await fetch("/api/subscribe", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setStatus("success");
+        setEmail("");
+      } else {
+        setStatus("error");
+        console.error("Fehler:", data.error);
+      }
+    } catch (error) {
+      setStatus("error");
+      console.error("Fehler:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="bg-blue-50 p-6 rounded-lg">
+      <h3 className="text-xl font-bold mb-2">Bleib auf dem Laufenden</h3>
+      <p className="mb-4">
+        Abonniere meinen Newsletter für Updates zu neuen Artikeln und Projekten.
+      </p>
+
+      <form onSubmit={handleSubmit} className="space-y-3">
+        <div>
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Deine E-Mail-Adresse"
+            required
+            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+
+        <button
+          type="submit"
+          disabled={loading}
+          className="w-full bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50">
+          {loading ? "Wird verarbeitet..." : "Abonnieren"}
+        </button>
+
+        {status === "success" && (
+          <p className="text-green-600">Danke fürs Abonnieren!</p>
+        )}
+
+        {status === "error" && (
+          <p className="text-red-600">
+            Ein Fehler ist aufgetreten. Bitte versuche es später erneut.
+          </p>
+        )}
+      </form>
+    </div>
+  );
+}
+```
+
+<NewsletterForm />
+
+## Kommentar-System mit Disqus
+
+Um die Interaktion mit meinen Lesern zu fördern, habe ich Disqus als Kommentar-System integriert:
+
+```javascript
+// components/Comments.js
+import { DiscussionEmbed } from "disqus-react";
+
+export default function Comments({ slug, title }) {
+  const disqusConfig = {
+    shortname: process.env.NEXT_PUBLIC_DISQUS_SHORTNAME,
+    config: {
+      identifier: slug,
+      title: title,
+    },
+  };
+
+  return (
+    <div className="comments-wrapper mt-10 pt-10 border-t">
+      <h3 className="text-2xl font-bold mb-6">Kommentare</h3>
+      <DiscussionEmbed {...disqusConfig} />
+    </div>
+  );
+}
+```
+
+## Responsive Design und Dark Mode
+
+Ein responsives Design ist heutzutage unerlässlich. Mit Tailwind CSS war die Implementierung relativ einfach:
+
+```javascript
+// components/BlogPostCard.js
+import Link from "next/link";
+import Image from "next/image";
+import { format } from "date-fns";
+import { de } from "date-fns/locale";
+
+export default function BlogPostCard({ post }) {
+  return (
+    <article className="flex flex-col md:flex-row overflow-hidden rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 bg-white dark:bg-gray-800">
+      <div className="md:w-1/3 relative h-60 md:h-auto">
+        {post.coverImage ? (
+          <Image
+            src={post.coverImage}
+            alt={post.title}
+            layout="fill"
+            objectFit="cover"
+          />
+        ) : (
+          <div className="w-full h-full bg-gray-200 dark:bg-gray-700" />
+        )}
+      </div>
+
+      <div className="p-6 md:w-2/3">
+        <div className="text-sm text-gray-500 dark:text-gray-400 mb-2">
+          {format(new Date(post.date), "d. MMMM yyyy", { locale: de })}
+          {post.readingTime && ` · ${post.readingTime} Min Lesezeit`}
+        </div>
+
+        <Link href={`/blog/${post.slug}`}>
+          <a className="block">
+            <h2 className="text-xl font-bold mb-2 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+              {post.title}
+            </h2>
+          </a>
+        </Link>
+
+        <p className="text-gray-600 dark:text-gray-300 mb-4">{post.excerpt}</p>
+
+        {post.categories && (
+          <div className="flex flex-wrap gap-2">
+            {post.categories.map((category) => (
+              <Link key={category} href={`/category/${category}`}>
+                <a className="text-sm bg-gray-100 dark:bg-gray-700 px-3 py-1 rounded-full hover:bg-blue-100 dark:hover:bg-blue-900 transition-colors">
+                  {category}
+                </a>
+              </Link>
+            ))}
+          </div>
+        )}
+      </div>
+    </article>
+  );
+}
+```
+
+## Dark Mode Implementierung
+
+Die Unterstützung für Dark Mode war mir wichtig und wurde wie folgt implementiert:
+
+```javascript
+// components/ThemeToggle.js
+import { useTheme } from "next-themes";
+import { useState, useEffect } from "react";
+import { SunIcon, MoonIcon } from "@heroicons/react/outline";
+
+export default function ThemeToggle() {
+  const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  // Client-side only
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return null;
+  }
+
+  return (
+    <button
+      aria-label="Toggle Dark Mode"
+      type="button"
+      className="p-2 rounded-lg bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
+      onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>
+      {theme === "dark" ? (
+        <SunIcon className="h-5 w-5 text-yellow-500" />
+      ) : (
+        <MoonIcon className="h-5 w-5 text-gray-700" />
+      )}
+    </button>
+  );
+}
+```
+
+## Analytik und SEO
+
+Für SEO-Optimierung habe ich eine spezielle Meta-Komponente erstellt:
+
+```javascript
+// components/Meta.js
+import Head from "next/head";
+
+export default function Meta({
+  title,
+  description,
+  image,
+  url,
+  type = "website",
+}) {
+  const siteName = "Mein Portfolio & Blog";
+  const fullTitle = title ? `${title} | ${siteName}` : siteName;
+
+  return (
+    <Head>
+      <title>{fullTitle}</title>
+      <meta name="description" content={description} />
+      <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+      {/* Open Graph / Facebook */}
+      <meta property="og:type" content={type} />
+      <meta property="og:url" content={url} />
+      <meta property="og:title" content={fullTitle} />
+      <meta property="og:description" content={description} />
+      {image && <meta property="og:image" content={image} />}
+
+      {/* Twitter */}
+      <meta property="twitter:card" content="summary_large_image" />
+      <meta property="twitter:url" content={url} />
+      <meta property="twitter:title" content={fullTitle} />
+      <meta property="twitter:description" content={description} />
+      {image && <meta property="twitter:image" content={image} />}
+
+      {/* Favicon */}
+      <link rel="icon" href="/favicon.ico" />
+      <link
+        rel="apple-touch-icon"
+        sizes="180x180"
+        href="/apple-touch-icon.png"
+      />
+      <link
+        rel="icon"
+        type="image/png"
+        sizes="32x32"
+        href="/favicon-32x32.png"
+      />
+      <link
+        rel="icon"
+        type="image/png"
+        sizes="16x16"
+        href="/favicon-16x16.png"
+      />
+      <link rel="manifest" href="/site.webmanifest" />
+    </Head>
+  );
+}
+```
+
+## Fazit und Ausblick
+
+Die Entwicklung meiner Portfolio-Website mit Blog-Funktionalität war ein spannendes Projekt, das mir erlaubt hat, viele moderne Webentwicklungstechniken anzuwenden. Besonders stolz bin ich auf die performante Implementation des Blogs mit Markdown und MDX, die eine sehr gute Nutzererfahrung bietet.
+
+Für die Zukunft plane ich, folgende Funktionen zu ergänzen:
+
+1. Eine Internationalisierung (i18n) für mehrsprachigen Content
+2. Ein verbessertes Analytics-Dashboard für Content-Performance
+3. Integration von interaktiven Codebeispielen mit CodeSandbox oder ähnlichen Tools
+4. Eine PWA-Implementation für Offline-Nutzung
+
+<InfoBox type="success">
+  Wenn du Fragen zur Implementation hast oder Hilfe bei deinem eigenen Projekt
+  benötigst, hinterlasse gerne einen Kommentar oder kontaktiere mich direkt über
+  das Kontaktformular.
+</InfoBox>
+
+## Nützliche Ressourcen
+
+- [Next.js Dokumentation](https://nextjs.org/docs)
+- [Tailwind CSS](https://tailwindcss.com/)
+- [MDX](https://mdxjs.com/)
+- [Fuse.js für Suche](https://fusejs.io/)
+- [Vercel Platform](https://vercel.com/)
