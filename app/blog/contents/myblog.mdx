@@ -3,13 +3,9 @@ title: "Mein Weg zur Entwicklung einer modernen Portfolio-Website mit Blog-Funkt
 publishedAt: "2025-03-21"
 summary: "Ein detaillierter Einblick in die Entwicklung meiner Portfolio-Website mit Blog-Funktionalität, technische Implementierungsdetails und Code-Beispiele."
 category: "web"
-img: "/social/website.png"
+img: "/img/ai-cover.jpg"
 duration: 18
 ---
-
-import CodeBlock from "../../components/CodeBlock";
-import BlogImage from "../../components/BlogImage";
-import NewsletterForm from "../../components/NewsletterForm";
 
 # Mein Weg zur Entwicklung einer modernen Portfolio-Website mit Blog-Funktionalität
 
@@ -37,11 +33,7 @@ Nach sorgfältiger Überlegung entschied ich mich für folgenden Tech-Stack:
 
 Die Entscheidung für Next.js war besonders wichtig, da es Server-Side Rendering (SSR) und Static Site Generation (SSG) ermöglicht, was für SEO und Performance entscheidend ist.
 
-<BlogImage
-  src="/images/blog/tech-stack-diagram.png"
-  alt="Visualisierung meines Technology Stacks"
-  className="my-8"
-/>
+![Next Js SEO and Performance](https://www.itsvocs.com/nextjs.avif)
 
 ## Das Herzstück: Blog-Implementierung mit Markdown und MDX
 
@@ -51,7 +43,7 @@ Der Blog-Bereich war definitiv eine der spannendsten Herausforderungen. Ich woll
 
 Anstatt ein komplexes CMS aufzusetzen, habe ich mich für einen dateisystembasierten Ansatz entschieden. Alle Blog-Beiträge werden als Markdown-Dateien im Projektverzeichnis gespeichert:
 
-```javascript
+```ts
 // lib/api.js
 import fs from "fs";
 import path from "path";
@@ -105,7 +97,7 @@ export function getAllPosts(fields = []) {
 
 Um meine Blog-Posts mit interaktiven React-Komponenten anzureichern, integrierte ich MDX:
 
-```javascript
+```ts
 // pages/blog/[slug].js
 import { MDXRemote } from "next-mdx-remote";
 import { serialize } from "next-mdx-remote/serialize";
@@ -202,7 +194,7 @@ export async function getStaticPaths() {
 
 Da ich viele Code-Beispiele in meinen Blog-Posts teile, war ein gutes Syntax-Highlighting unverzichtbar. Die Implementierung erfolgte über eine eigene CodeBlock-Komponente:
 
-```javascript
+```ts
 // components/CodeBlock.js
 import React from "react";
 import Prism from "prismjs";
@@ -255,16 +247,11 @@ class CodeBlock extends React.Component {
 export default CodeBlock;
 ```
 
-<InfoBox type="tip">
-  Die CodeBlock-Komponente fügt automatisch einen "Kopieren"-Button zu jedem
-  Code-Block hinzu, was die Benutzerfreundlichkeit deutlich verbessert!
-</InfoBox>
-
 ## Implementierung der Kategorien und Tags
 
 Eine wichtige Funktion für meinen Blog war die Möglichkeit, Beiträge zu kategorisieren und mit Tags zu versehen. Hier ist meine Implementierung:
 
-```javascript
+```ts
 // lib/categories.js
 export function getAllCategories(posts) {
   const categoriesSet = new Set();
@@ -410,8 +397,8 @@ export default function Search({ posts }) {
 
 Bilder können die Ladezeit einer Website erheblich beeinträchtigen. Mit next/image habe ich die Bildoptimierung automatisiert:
 
-```javascript
-// components/BlogImage.js
+```ts
+import BlogImage from components/BlogImage.js
 import Image from "next/image";
 
 export default function BlogImage({ src, alt, className }) {
@@ -434,11 +421,7 @@ export default function BlogImage({ src, alt, className }) {
 }
 ```
 
-<BlogImage
-  src="/images/blog/performance-comparison.png"
-  alt="Performance-Vergleich vor und nach der Optimierung"
-  className="my-8"
-/>
+![Image Performance Next js](https://nextjs.org/_next/image?url=https%3A%2F%2Fh8DxKfmAPhn8O0p3.public.blob.vercel-storage.com%2Fdocs%2Fdark%2Ffill-container.png&w=3840&q=75)
 
 ### Web Vitals Optimierung
 
@@ -562,13 +545,11 @@ export default function NewsletterForm() {
 }
 ```
 
-<NewsletterForm />
-
 ## Kommentar-System mit Disqus
 
 Um die Interaktion mit meinen Lesern zu fördern, habe ich Disqus als Kommentar-System integriert:
 
-```javascript
+```ts
 // components/Comments.js
 import { DiscussionEmbed } from "disqus-react";
 
@@ -763,11 +744,9 @@ Für die Zukunft plane ich, folgende Funktionen zu ergänzen:
 3. Integration von interaktiven Codebeispielen mit CodeSandbox oder ähnlichen Tools
 4. Eine PWA-Implementation für Offline-Nutzung
 
-<InfoBox type="success">
-  Wenn du Fragen zur Implementation hast oder Hilfe bei deinem eigenen Projekt
-  benötigst, hinterlasse gerne einen Kommentar oder kontaktiere mich direkt über
-  das Kontaktformular.
-</InfoBox>
+> Wenn du Fragen zur Implementation hast oder Hilfe bei deinem eigenen Projekt
+> benötigst, hinterlasse gerne einen Kommentar oder kontaktiere mich direkt über
+> das Kontaktformular.
 
 ## Nützliche Ressourcen
 
