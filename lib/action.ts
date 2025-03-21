@@ -2,9 +2,10 @@
 
 import { db } from "@/db";
 import { Prisma } from "@prisma/client";
-import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { validateEmailAddress } from "./blog/utils";
+
+import { revalidatePath } from "next/cache";
 
 const FormSchema = z.object({
   id: z.number(),
@@ -82,8 +83,10 @@ export async function updateLikes({
           [action]: 1,
         },
       },
-      select: { likes: true },
+      select: { likes: true, category: true, slug: true },
     });
+
+    revalidatePath(`/blog/${updatedBlog.category}/${updatedBlog.slug}}`); // Navigate to the new post page
     return updatedBlog.likes;
   } catch (error) {
     console.error(`Erreur lors de la mise à jour des likes :`, error);
