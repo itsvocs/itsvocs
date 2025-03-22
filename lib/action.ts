@@ -4,7 +4,9 @@ import { db } from "@/db";
 import { Prisma } from "@prisma/client";
 import { z } from "zod";
 import { validateEmailAddress } from "./blog/utils";
-
+import { Resend } from "resend";
+import dns from "dns";
+import { promisify } from "util";
 import { revalidatePath } from "next/cache";
 
 const FormSchema = z.object({
@@ -166,5 +168,81 @@ export async function newFeedBack(
       },
       message: "Database error occurred.",
     };
+  }
+}
+
+//! Email with Resend
+// Schéma de validation pour l'email et le message
+const contactFormSchema = z.object({
+  email: z.string().email("Bitte geben Sie eine richtige Email Adresse"),
+  message: z.string().min(2, "Die Nachricht muss nicht leer sein"),
+});
+
+const resend = new Resend(process.env.RESEND_API_KEY);
+const resolveMx = promisify(dns.resolveMx);
+
+async function isEmailDomainValid(email: string) {
+  try {
+    const domain = email.split("@")[1];
+    const mxRecords = await resolveMx(domain);
+    return Array.isArray(mxRecords) && mxRecords.length > 0;
+  } catch (error) {
+    console.error("Erreur lors de la vérification du domaine:", error);
+    return false;
+  }
+}
+
+export async function sendContactForm(formData: {
+  email: string;
+  message: string;
+}) {
+  try {
+    // Validation des données avec Zod
+    const validatedData = contactFormSchema.parse(formData);
+
+    // Vérification du domaine de l'email
+    const isEmailValid = await isEmailDomainValid(validatedData.email);
+
+    if (!isEmailValid) {
+      throw new Error("Die E-Mail-Adresse ist ungültig oder hat keine Domain.");
+    }
+
+    const { error } = await resend.emails.send({
+      from: `Kontaktformular <onboarding@resend.dev>`, // Verwenden Sie eine von Resend verifizierte Adresse
+      replyTo: validatedData.email, // Utiliser l'email de l'utilisateur comme reply-to
+      to: "jordanpouani@icloud.com",
+      subject: "Neue Kontaktanfrage",
+      html: `
+        <div style=" margin: 0 auto;">
+          <p><strong>From:</strong> ${validatedData.email}</p>
+          <div style="margin-top: 20px; padding: 4px;">
+            <p><strong>Nachricht:</strong></p>
+            <p>${validatedData.message.replace(/\n/g, "<br>")}</p>
+          </div>
+          <p style="margin-top: 20px; font-size: 12px; color: #666;">
+            Diese E-Mail wurde über das Kontaktformular Ihrer Website gesendet.
+          </p>
+        </div>
+      `,
+    });
+
+    if (error) {
+      console.error("Erreur lors de l'envoi de l'e-mail:", error);
+      throw new Error("Fehler beim Versand der E-Mail");
+    }
+    return { success: true };
+  } catch (error) {
+    console.error("Erreur dans Server Action:", error);
+    if (error instanceof z.ZodError) {
+      throw new Error(
+        error.errors.length > 0
+          ? error.errors[0].message
+          : "Ein Validierungsfehler ist aufgetreten."
+      );
+    }
+    let errorMessage;
+    if (error instanceof Error) errorMessage = error.message;
+    else errorMessage = "Fehler bei der Sendung.";
+    return { success: false, message: errorMessage };
   }
 }
