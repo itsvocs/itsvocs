@@ -12,6 +12,11 @@ type Project = {
   technologie: string[];
   github: string;
   link?: string;
+  blog: {
+    slug: string;
+    title: string;
+    category: string;
+  };
 };
 
 export default function Page() {
