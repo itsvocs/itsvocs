@@ -1,0 +1,78 @@
+---
+title: "GitHub mit Xcode synchronisieren – Schritt für Schritt"
+publishedAt: "2025-03-31"
+summary: "Eine Anleitung zur Einrichtung von GitHub in Xcode zur Synchronisierung deines Codes. Erfahre, wie du dein Xcode-Projekt mit einem GitHub-Repository verbindest, Änderungen verwaltest und deine Projekte sicher speicherst."
+category: "mobile"
+img: "/img/github-x.avif"
+duration: 3
+---
+
+## Einführung
+
+GitHub ist ein leistungsstarkes Tool zur Versionskontrolle und Zusammenarbeit an Codeprojekten. Wenn du Xcode für die iOS- oder macOS-Entwicklung nutzt, kannst du dein Projekt direkt mit GitHub synchronisieren. Diese Anleitung zeigt dir Schritt für Schritt, wie du dein Projekt mit einem GitHub-Repository verbindest.
+
+## Voraussetzungen
+
+- Xcode (neueste Version empfohlen)
+- Ein GitHub-Account
+- Ein bestehendes Xcode-Projekt oder ein neues Projekt
+
+## Schritt 1: Git in Xcode aktivieren
+
+Bevor du dein Projekt mit GitHub verbindest, stelle sicher, dass Git in Xcode aktiviert ist:
+
+1. Öffne Xcode und erstelle ein neues Projekt oder öffne ein bestehendes.
+2. Gehe zu **File** → **New** → **Project**.
+3. Stelle sicher, dass die Option **„Create Git repository on my Mac“** aktiviert ist.
+
+## Schritt 2: GitHub mit Xcode verbinden
+
+1. Öffne **Xcode**.
+2. Gehe zu **Xcode** → **Settings** (Einstellungen) → **Accounts**.
+3. Klicke auf **„+“** und wähle **GitHub** aus.
+4. Melde dich mit deinen GitHub-Zugangsdaten an oder nutze ein Personal Access Token.
+5. Nach erfolgreicher Authentifizierung wird dein GitHub-Account in Xcode angezeigt.
+
+## Schritt 3: Ein neues Repository auf GitHub erstellen
+
+1. Gehe zu [GitHub](https://github.com/) und melde dich an.
+2. Klicke auf **„New Repository“**.
+3. Gib einen Namen für dein Repository ein und wähle „Public“ oder „Private“.
+4. Kopiere die Repository-URL.
+
+## Schritt 4: Xcode-Projekt mit GitHub verknüpfen
+
+1. Öffne das **Terminal** und navigiere in dein Xcode-Projektverzeichnis:
+   ```sh
+   cd /Pfad/zu/deinem/Projekt
+   ```
+2. Füge das entfernte GitHub-Repository hinzu:
+   ```sh
+   git remote add origin https://github.com/deinBenutzername/deinRepository.git
+   ```
+3. Überprüfe die Remote-Verbindung:
+   ```sh
+   git remote -v
+   ```
+4. Push dein Projekt auf GitHub:
+   ```sh
+   git push -u origin main
+   ```
+
+## Schritt 5: Änderungen mit Xcode verwalten
+
+Nachdem dein Projekt mit GitHub verbunden ist, kannst du Änderungen direkt in Xcode verwalten:
+
+1. Öffne **Source Control Navigator** (**Cmd + 2**).
+2. Sieh dir Änderungen an und committe sie mit einer Nachricht.
+3. Drücke **Push**, um die Änderungen auf GitHub hochzuladen.
+
+## Fazit
+
+Die Integration von GitHub in Xcode ist ein essenzieller Schritt für die effiziente Verwaltung und Zusammenarbeit an iOS- und macOS-Projekten. Mit dieser Einrichtung kannst du sicherstellen, dass dein Code gesichert und synchronisiert bleibt.
+
+> Code ist nur dann wertvoll, wenn er gut verwaltet wird.
+
+![GitHub in Xcode](https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8Z2l0aHVifGVufDB8fDB8fHww)
+
+Für weitere Informationen, besuche die [Apple Developer Documentation](https://developer.apple.com/documentation/xcode).

@@ -60,7 +60,7 @@ export const SOCIAL = [
   },
   {
     name: "LinkedIn",
-    link: "https://github.com/itsvocs",
+    link: "https://linkedin.com/in/itsvocs",
   },
 ];
 
