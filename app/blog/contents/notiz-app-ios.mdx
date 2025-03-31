@@ -1,0 +1,108 @@
+---
+title: "Einfache Notizen-App mit SwiftUI – Schritt für Schritt"
+publishedAt: "2025-03-31"
+summary: "In diesem Tutorial lernst du, wie du in wenigen Minuten eine einfache Notizen-App für iOS mit SwiftUI erstellst. Perfekt für Anfänger!"
+category: "mobile"
+img: "/img/notiz.png"
+duration: 8
+---
+
+## Einführung
+
+SwiftUI macht es einfach, intuitive und moderne iOS-Apps zu entwickeln. In diesem Tutorial erstellen wir eine einfache Notizen-App, mit der Nutzer ihre Notizen hinzufügen und löschen können. Perfekt für Anfänger, die SwiftUI kennenlernen möchten!
+
+## Voraussetzungen
+
+- Xcode (neueste Version empfohlen)
+- Grundlegende Swift-Kenntnisse (nicht zwingend erforderlich)
+
+## Schritt 1: Ein neues SwiftUI-Projekt erstellen
+
+1. Öffne **Xcode**.
+2. Wähle **Create a new Xcode project**.
+3. Wähle die App-Vorlage unter **iOS → App**.
+4. Gib einen Namen ein (z. B. „Notizen App“).
+5. Wähle **Swift** als Sprache und **SwiftUI** als Benutzeroberfläche.
+6. Erstelle das Projekt und öffne die Datei `ContentView.swift`.
+
+## Schritt 2: Grundlegendes UI-Layout mit SwiftUI erstellen
+
+Ersetze den Code in `ContentView.swift` mit folgendem:
+
+```swift
+import SwiftUI
+
+struct ContentView: View {
+    @State var notizen: [String] = []
+    @State var notiz = ""
+
+    var body: some View {
+        NavigationView {
+            VStack {
+                List {
+                    ForEach(notizen, id: \ .self) { notiz in
+                        Text(notiz)
+                    }
+                    .onDelete(perform: { indexSet in
+                        notizen.remove(atOffsets: indexSet)
+                    })
+                }
+                .navigationTitle("Notizen")
+
+                HStack {
+                    TextField("Neue Notiz", text: $notiz)
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
+
+                    Button("Hinzufügen") {
+                        if !notiz.isEmpty {
+                            notizen.append(notiz)
+                            notiz = ""
+                        }
+                    }
+                    .padding(.leading, 10)
+                }
+                .padding()
+            }
+        }
+    }
+}
+
+#Preview {
+    ContentView()
+}
+```
+
+## Schritt 3: Code-Erklärung
+
+### 1. **@State-Variablen**
+
+Wir nutzen `@State`, um eine Liste von Notizen (`notizen`) und den aktuellen Eingabetext (`notiz`) zu speichern.
+
+### 2. **List mit Notizen anzeigen**
+
+- `List` zeigt alle Notizen an.
+- `ForEach` durchläuft die Liste der Notizen.
+- `onDelete` ermöglicht das Löschen einer Notiz per Swipe.
+
+### 3. **Neue Notizen hinzufügen**
+
+- `TextField` ermöglicht die Texteingabe.
+- `Button("Hinzufügen")` fügt die neue Notiz zur Liste hinzu.
+- `if !notiz.isEmpty` stellt sicher, dass leere Notizen nicht gespeichert werden.
+
+## Schritt 4: App im Simulator testen
+
+1. Klicke in Xcode auf **Run (▶️)**, um die App im iPhone-Simulator zu starten.
+2. Füge eine Notiz hinzu, indem du Text eingibst und auf **Hinzufügen** tippst.
+3. Wische nach links über eine Notiz, um sie zu löschen.
+
+## Fazit
+
+Herzlichen Glückwunsch! 🎉 Du hast erfolgreich eine einfache Notizen-App mit SwiftUI erstellt. Diese App kann erweitert werden, z. B. durch das Speichern der Notizen oder eine Synchronisation mit der Cloud.
+
+> "Jeder große Entwickler war einmal ein Anfänger." – Unbekannt
+
+![iOS Notizen App](/img/notizfull.png)
+
+Du kannst den gesamten und kostenlosen Code auf meinem Github Konto sehen 😃[https://github.com/itsvocs/Notizen-App](https://github.com/itsvocs/Notizen-App)
+[SwiftUI-Dokumentation](https://developer.apple.com/documentation/swiftui).

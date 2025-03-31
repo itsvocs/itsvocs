@@ -13,6 +13,11 @@ type Project = {
   technologie: string[];
   github: string;
   link?: string;
+  blog: {
+    slug: string;
+    title: string;
+    category: string;
+  };
 };
 
 export default function FeaturedComponent() {
@@ -57,9 +62,9 @@ export default function FeaturedComponent() {
         ) : (
           <>
             <div className="grid lg:grid-cols-3 grid-cols-1 md:grid-cols-2 gap-6 ">
-              {projects.map((project, j) => (
-                <ProjectCard key={j} project={project} />
-              ))}
+              {projects
+                .map((project, j) => <ProjectCard key={j} project={project} />)
+                .slice(0, 12)}
             </div>
           </>
         )}

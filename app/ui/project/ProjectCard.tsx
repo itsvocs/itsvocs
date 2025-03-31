@@ -11,8 +11,10 @@ import {
   FileCode,
   GitFork,
   GithubLogo,
+  GlobeSimple,
   HeadCircuit,
   Heartbeat,
+  LinkSimpleHorizontal,
   Plus,
   Star,
 } from "@phosphor-icons/react";
@@ -39,6 +41,11 @@ type Project = {
   technologie: string[];
   github: string;
   link?: string;
+  blog: {
+    slug: string;
+    title: string;
+    category: string;
+  };
 };
 
 type GithubData = {
@@ -121,8 +128,12 @@ export default function ProjectCard({ project }: { project: Project }) {
     }
   }
 
+  const linkedPage = project.link ? project.link : project.github;
+  const linkArtikel = project.blog
+    ? `/blog/${project.blog.category}/${project.blog.slug}`
+    : "null";
   return (
-    <Card>
+    <Card className="relative">
       <CardHeader className="flex-row items-center gap-x-2">
         <div className="flex-shrink-0 w-10">
           <div
@@ -229,18 +240,39 @@ export default function ProjectCard({ project }: { project: Project }) {
       ) : (
         <CardFooter className="flex flex-col items-start">
           <div>
-            <p className="text-sm text-muted-foreground">
-              {githubData?.default_branch}
+            <p className="text-sm text-muted-foreground/70">
+              {githubData == undefined
+                ? "default main"
+                : githubData?.default_branch}
             </p>
           </div>
           <div>
             <Button
               variant="ghost"
               className="rounded-full pl-0 hover:bg-transparent cursor-default text-muted-foreground">
-              <Star className="-ms-1 opacity-60" size={16} aria-hidden="true" />
+              <GlobeSimple
+                weight="bold"
+                className="-ms-1 opacity-60 text-indigo-600"
+                size={16}
+                aria-hidden="true"
+              />
+              <Link href={linkedPage}>
+                <span className="flex items-baseline gap-2">Link</span>
+              </Link>
+            </Button>
+            <Button
+              variant="ghost"
+              className="rounded-full pl-0 hover:bg-transparent cursor-default text-muted-foreground">
+              <Star
+                className="-ms-1 opacity-60 text-amber-600"
+                size={16}
+                aria-hidden="true"
+              />
               <span className="flex items-baseline gap-2">
                 Star
-                <span className="text-xs">{githubData?.stars}</span>
+                <span className="text-xs">
+                  {githubData == undefined ? 0 : githubData?.stars}
+                </span>
               </span>
             </Button>
             <Button
@@ -253,10 +285,20 @@ export default function ProjectCard({ project }: { project: Project }) {
               />
               <span className="flex items-baseline gap-2">
                 Fork
-                <span className="text-xs">{githubData?.forks}</span>
+                <span className="text-xs">
+                  {githubData == undefined ? 0 : githubData?.forks}
+                </span>
               </span>
             </Button>
           </div>
+          {linkArtikel !== "null" && (
+            <Link
+              href={linkArtikel}
+              className="inline-flex gap-2 text-xs text-muted-foreground hover:text-foreground transition-colors justify-center items-center">
+              <LinkSimpleHorizontal className="w-5 h-5" />
+              Artikel lesen
+            </Link>
+          )}
         </CardFooter>
       )}
     </Card>

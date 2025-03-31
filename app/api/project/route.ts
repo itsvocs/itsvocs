@@ -12,6 +12,10 @@ export async function GET() {
         technologie: true,
         github: true,
         link: true,
+        blog: true,
+      },
+      orderBy: {
+        id: "desc",
       },
     });
 
