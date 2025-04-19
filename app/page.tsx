@@ -20,8 +20,8 @@ export default async function Home() {
           <PopularPosts />
         </div>
       </div>
-      <FeaturedComponent />
       <Lastestpost />
+      <FeaturedComponent />
       <NewsLetter />
     </div>
   );
